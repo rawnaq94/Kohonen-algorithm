@@ -1,0 +1,81 @@
+import numpy as np
+import math
+import matplotlib.pyplot as plt
+import random
+
+
+def eucliden_distance1(x,y,xr,yr):
+    return np.sqrt((x-xr)**2+(y-yr)**2)
+    
+def bmu1(x,y,xr,yr):
+    distanes=eucliden_distance1(x,y,xr,yr)
+    index_min=np.argmin(distanes).item()
+    return index_min
+    
+
+def update_neightbord1(x,y,min_indx,x_rand,y_rand,alpha,radius):    
+    #dis=eucliden_distance1(x,y,x[min_indx],y[min_indx])    
+    x[min_indx] = x[min_indx]+alpha*(x_rand-x[min_indx])
+    y[min_indx] = y[min_indx]+alpha*(y_rand-y[min_indx])
+    for idx in range(radius):            
+        if idx+min_indx+1 < x.size -1:
+            x[idx+min_indx+1] = x[idx+min_indx+1]+alpha*(x_rand-x[idx+min_indx+1])
+            y[idx+min_indx+1] = y[idx+min_indx+1]+alpha*(y_rand-y[idx+min_indx+1])
+        if idx+min_indx+1 > 0:
+            x[idx-min_indx-1] = x[idx-min_indx-1]+alpha*(x_rand-x[idx-min_indx-1])
+            y[idx-min_indx-1] = y[idx-min_indx-1]+alpha*(y_rand-y[idx-min_indx-1])
+          
+    return(x,y)
+ 
+ 
+ 
+ def train1(x,y,steps,alpha,radius,isline=True):
+    init_alpha=alpha
+    init_radius=radius
+    a=[]
+    b=[]
+    
+    for i in range(steps):    
+        x_rand=np.random.uniform(-10,10,1)
+        y_rand=np.random.uniform(-10,10,1)
+        a.append(x_rand) 
+        b.append(y_rand)
+  
+        ind_min=bmu1(x,y,x_rand,y_rand)
+      
+        x,y=update_neightbord1(x,y,ind_min,x_rand,y_rand,init_alpha,init_radius)
+     
+        alpha = init_alpha * np.exp(-i/steps)
+        #radius  = init_radius * np.exp(-i/steps)
+        if i%5000==0 :
+          init_radius  = init_radius -1
+          radius  = init_radius 
+        if i%200==0:
+            draw1(x, y, i, radius, alpha,a,b)
+        if i == steps-1:
+            draw1(x, y, steps, radius, alpha,a,b)
+  
+  
+  
+  def draw1(w1, w2, iterate, radius, l_rate, x,y,isline=True):
+    
+    fig, ax = plt.subplots()
+
+    #w1, w2 = zip(*sorted(zip(w1,w2)))
+    if isline:
+      plt.plot(w1, w2, color='brown', marker='o', linestyle='dashed', 
+                           linewidth=2, markersize=12)
+      
+    else:
+      plt.plot(w1, w2, color='brown', marker='o', linestyle='none', 
+                           markersize=12)
+    #plt.plot(x,y, color='blue', marker='o', linestyle='dashed', 
+    #                       linewidth=2, markersize=12)
+    ax.set(xlabel='x', 
+           ylabel='y',
+           title='Kohonen algorithm (Setps: {}, Radius: {:.3f}, learnibg_rate:{:.3f})'
+           .format(iterate, radius, l_rate))
+    ax.grid()
+    plt.show()
+    
+    
