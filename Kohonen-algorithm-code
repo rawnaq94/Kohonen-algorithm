@@ -79,3 +79,49 @@ def update_neightbord1(x,y,min_indx,x_rand,y_rand,alpha,radius):
     plt.show()
     
     
+    print("model 1")  
+x = np.random.uniform(-100,100,50)
+y = np.random.uniform(-100,100,50)
+
+step_max =1000
+radius = 5
+alpha = 0.5
+
+#draw(x, y, 0, radius, alpha)
+train1(x, y, step_max, alpha,  radius)
+    
+    
+    
+    print("non-uniform") 
+x = np.random.uniform(-100,100,50)
+y = np.random.uniform(-100,100,50)
+step_max =1000
+radius = 5
+alpha = 0.3
+#draw(x, y, 0, radius, alpha)
+train2(x, y, step_max, alpha,  radius)
+
+
+def Create_circle_points(From_range,to_range,size=100):
+    angle=np.random.uniform(0,2*np.pi,size) # 360 -> 2*np.pi
+    radius=np.random.uniform(From_range,to_range,size)
+    x = radius*np.cos(angle)    # or sin
+    y = radius*np.sin(angle)    #    cos
+    return x,y
+    
+  def from_circle():
+  x, y = Create_circle_points(-50,50)
+  rand=random.randint(0,99)
+  return x[rand] ,y[rand]
+  
+  print("circle model")  
+
+x = np.random.uniform(-100,100,100)
+y = np.random.uniform(-100,100,100)
+
+step_max =10000
+radius = 5
+alpha = 0.3
+
+#draw(x, y, 0, radius, alpha)
+train2(x, y, step_max, alpha,  radius ,isline=False)
